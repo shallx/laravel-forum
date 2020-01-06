@@ -2,6 +2,7 @@
 
 namespace LaravelForum\Http\Controllers;
 
+use LaravelForum\Reply;
 use Illuminate\Http\Request;
 use LaravelForum\Discussion;
 use LaravelForum\Http\Requests\CreateReplyRequest;
@@ -87,5 +88,9 @@ class RepliesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function reply(Discussion $discussion, Reply $reply){
+        $discussion->markAsBestReply($reply);
     }
 }

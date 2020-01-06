@@ -15,8 +15,61 @@
         <hr>
 
         {!!$discussion->content!!}
+        <hr>
+
+        @if($discussion->bestReply)
+            <div class="card mt-2">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <img height="40px" width="40px" style="border-radius:50%" src="{{Gravatar::src($discussion->bestReply->owner->email)}}">
+                            <strong>{{$discussion->bestReply->owner->name}}</strong>
+                        </div>
+                        <div>
+                            @if(auth()->user()->id == $discussion->user_id)
+        
+                                <strong>BEST REPLY</strong>
+        
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {!! $discussion->bestReply->content!!}
+                </div>
+            </div>
+        @endif
     </div>
 </div>
+
+<div style="height:30px"></div>
+@foreach ($discussion->replies()->paginate(3) as $reply)
+    <div class="card mt-2">
+        <div class="card-header">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <img height="40px" width="40px" style="border-radius:50%" src="{{Gravatar::src($reply->owner->email)}}">
+                    <strong>{{$reply->owner->name}}</strong>
+                </div>
+                <div>
+                    @if(auth()->user()->id == $discussion->user_id)
+
+                        <form action="{{ route('discussions.best-reply', ['discussion' => $discussion, 'reply' => $reply] )}}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-sm">Mark as best Reply</button>                   
+                        </form>
+
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            {!! $reply->content!!}
+        </div>
+    </div>
+@endforeach
+
+{{$discussion->replies()->paginate(3)->links()}}
 
 <div class="card">
     <div class="card-header">Add a Replay</div>
