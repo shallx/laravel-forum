@@ -31,7 +31,17 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @auth
+                            <li class="nav-item">
+                                <a href=" {{route('users.notifications')}}" class="nav-link">
+                                    <span class="ml-2 badge badge-info text-white">
+                                        {{auth()->user()->unreadNotifications->count()}}
+                                        Unread Notifications
+                                    </span>
+                                </a>
+                            </li>
+                        @endauth
+                        <li class="nav-item"><a href=" {{route('discussions.index')}}" class="nav-link">Discussion</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -85,7 +95,10 @@
                     <div class="card-body">
                         <ul class="list-group">
                             @foreach($channels as $channel)
-                            <li class="list-group-item">{{$channel->name}}</li>
+                            <li class="list-group-item">
+                                
+                                <a href="{{ route('discussions.index') }}?channel={{$channel->slug}}" class="nav-link">{{$channel->name}}</a>
+                            </li>
                             @endforeach
                         </ul>
                     </div>

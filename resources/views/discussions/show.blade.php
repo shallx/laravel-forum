@@ -51,16 +51,18 @@
                     <img height="40px" width="40px" style="border-radius:50%" src="{{Gravatar::src($reply->owner->email)}}">
                     <strong>{{$reply->owner->name}}</strong>
                 </div>
+
+                @auth
                 <div>
                     @if(auth()->user()->id == $discussion->user_id)
-
                         <form action="{{ route('discussions.best-reply', ['discussion' => $discussion, 'reply' => $reply] )}}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary btn-sm">Mark as best Reply</button>                   
                         </form>
-
                     @endif
                 </div>
+                @endauth
+
             </div>
         </div>
         <div class="card-body">

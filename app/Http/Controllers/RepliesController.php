@@ -6,6 +6,8 @@ use LaravelForum\Reply;
 use Illuminate\Http\Request;
 use LaravelForum\Discussion;
 use LaravelForum\Http\Requests\CreateReplyRequest;
+use LaravelForum\Notifications\NewReplyAdded;
+use LaravelForum\Notifications\ReplyMarkAsBestReply;
 
 class RepliesController extends Controller
 {
@@ -41,6 +43,7 @@ class RepliesController extends Controller
             'discussion_id' => $discussion->id,
             'content' => $request->content
         ]);
+        if($discussion->user_id != auth()->user()->id) $discussion->author->notify(new NewReplyAdded($discussion));
 
         return redirect()->back();
     }
@@ -92,5 +95,7 @@ class RepliesController extends Controller
 
     public function reply(Discussion $discussion, Reply $reply){
         $discussion->markAsBestReply($reply);
+        session()->flash('success', 'You have successfully chosen a best reply');
+        return redirect()->back();
     }
 }
